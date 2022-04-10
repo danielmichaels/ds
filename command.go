@@ -5,6 +5,7 @@
 package ds
 
 import (
+	"github.com/danielmichaels/ds/scripts"
 	"github.com/rwxrob/bonzai/comp"
 	Z "github.com/rwxrob/bonzai/z"
 	"github.com/rwxrob/config"
@@ -19,7 +20,7 @@ var Cmd = &Z.Cmd{
 	Version:   `v0.0.1`,
 	Copyright: `Copyright 2022 Daniel Michaels`,
 	License:   `Apache-2.0`,
-	Commands:  []*Z.Cmd{help.Cmd, config.Cmd, file, s},
+	Commands:  []*Z.Cmd{help.Cmd, config.Cmd, file, scripts.Cmd},
 	Description: `
 		This is my multi-call library which is set to replace the need for many
 		small bash scripts. Instead everything here will be portable and requires

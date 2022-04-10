@@ -1,0 +1,2 @@
+#!/bin/sh
+printf "%s\n" $(curl -s 'http://api.ipify.org?format=text')

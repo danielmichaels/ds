@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+docker run --rm -it -v "$HOME"/Code/github/danielms:/src -p 1313:1313  klakegg/hugo:latest "$@"

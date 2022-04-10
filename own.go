@@ -23,7 +23,7 @@ import (
 var s = &Z.Cmd{
 	Name:     `scripts`,
 	Summary:  `call custom scripts`,
-	Commands: []*Z.Cmd{help.Cmd, weather, ipify, til, hugo, envCheck, ipinfo},
+	Commands: []*Z.Cmd{help.Cmd, weather, ipify, til, hugo, envCheck, ipinfo, pfsenseManager},
 }
 
 var weather = &Z.Cmd{
@@ -50,6 +50,7 @@ var ipify = &Z.Cmd{
 		return Z.Exec("sh", script)
 	},
 }
+
 var hugo = &Z.Cmd{
 	Name:     `hugo`,
 	Summary:  `run the hugo docker image`,
@@ -147,6 +148,29 @@ var til = &Z.Cmd{
 		cmdlineArgs := strings.Join(args, " ")
 
 		script, err := scripts.Retriever("files/til")
+		if err != nil {
+			return err
+		}
+		defer func() { _ = os.Remove(script) }()
+
+		return Z.Exec("bash", script, cmdlineArgs)
+	},
+}
+
+var pfsenseManager = &Z.Cmd{
+	Name:     `pfsense-vm-manager`,
+	MinArgs:  1,
+	Params:   []string{"start", "stop"},
+	Summary:  `pfsense-vm-manager starts or stops multiple pfsense virtual machines for local testing`,
+	Commands: []*Z.Cmd{help.Cmd},
+	Description: `
+	**pfsense-vm-manager** is a shortcut to stop or start multiple pfsense
+	virtual machines for testing locally.`,
+	Call: func(caller *Z.Cmd, args ...string) error {
+		cmdlineArgs := strings.Join(args, " ")
+
+		script, err := scripts.Retriever("files/pfsense-vm-manager")
+
 		if err != nil {
 			return err
 		}

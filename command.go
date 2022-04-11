@@ -20,7 +20,7 @@ import (
 var Cmd = &Z.Cmd{
 	Name:      `ds`,
 	Summary:   `*Do Something* is a single binary to rule them all`,
-	Version:   `v0.0.1`,
+	Version:   `v0.0.2`,
 	Copyright: `Copyright 2022 Daniel Michaels`,
 	License:   `Apache-2.0`,
 	Commands:  []*Z.Cmd{help.Cmd, config.Cmd, file, scripts.Cmd, yq.Cmd, y2j.Cmd, vars.Cmd, uniq.Cmd},

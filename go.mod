@@ -3,10 +3,14 @@ module github.com/danielmichaels/ds
 go 1.18
 
 require (
-	github.com/rwxrob/bonzai v0.4.3
-	github.com/rwxrob/config v0.4.2
-	github.com/rwxrob/help v0.2.3
+	github.com/rwxrob/bonzai v0.6.3
+	github.com/rwxrob/config v0.4.3
+	github.com/rwxrob/help v0.3.1
 	github.com/rwxrob/json v0.6.0
+	github.com/rwxrob/uniq v0.1.5
+	github.com/rwxrob/vars v0.2.3
+	github.com/rwxrob/y2j v0.3.5
+	github.com/rwxrob/yq v0.2.4
 )
 
 require (
@@ -25,8 +29,7 @@ require (
 	github.com/rwxrob/scan v0.6.1 // indirect
 	github.com/rwxrob/structs v0.5.1 // indirect
 	github.com/rwxrob/term v0.2.6 // indirect
-	github.com/rwxrob/to v0.4.6 // indirect
-	github.com/rwxrob/yq v0.2.4 // indirect
+	github.com/rwxrob/to v0.5.2 // indirect
 	github.com/timtadh/data-structures v0.5.3 // indirect
 	github.com/timtadh/lexmachine v0.2.2 // indirect
 	golang.org/x/crypto v0.0.0-20220408190544-5352b0902921 // indirect

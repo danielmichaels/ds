@@ -1,3 +1,6 @@
+// Copyright 2022 ds Daniel Michaels
+// SPDX-License-Identifier: Apache-2.0
+
 package scripts
 
 import (
@@ -6,7 +9,7 @@ import (
 	"fmt"
 	Z "github.com/rwxrob/bonzai/z"
 	"github.com/rwxrob/help"
-	json2 "github.com/rwxrob/json"
+	"github.com/rwxrob/json"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -57,7 +60,8 @@ func Retriever(filename string) (string, error) {
 var Cmd = &Z.Cmd{
 	Name:     `scripts`,
 	Summary:  `call custom scripts`,
-	Commands: []*Z.Cmd{help.Cmd, weather, ipify, til, hugo, envCheck, ipinfo, pfsenseManager},
+	Aliases:  []string{"s"},
+	Commands: []*Z.Cmd{help.Cmd, weather, ipify, til, hugo, envCheck, ipinfo, pfsenseManager, epochDate},
 }
 
 var weather = &Z.Cmd{
@@ -139,7 +143,7 @@ var ipinfo = &Z.Cmd{
 
 		var result map[string]interface{}
 
-		cl := json2.Client
+		cl := json.Client
 		cl.CheckRedirect = func(r *http.Request, via []*http.Request) error {
 			for k, v := range via[0].Header {
 				r.Header[k] = v
@@ -148,7 +152,7 @@ var ipinfo = &Z.Cmd{
 		}
 		headers := map[string]string{}
 		headers["Authorization"] = bearer
-		req := json2.Request{
+		req := json.Request{
 			Method: "GET",
 			URL:    fmt.Sprintf("https://ipinfo.io/%s", args[0]),
 			Query:  nil,
@@ -156,11 +160,11 @@ var ipinfo = &Z.Cmd{
 			Body:   nil,
 			Into:   &result,
 		}
-		err := json2.Fetch(&req)
+		err := json.Fetch(&req)
 		if err != nil {
 			return err
 		}
-		marshal, err := json2.MarshalIndent(&result, " ", " ")
+		marshal, err := json.MarshalIndent(&result, " ", " ")
 		if err != nil {
 			return err
 		}
@@ -198,8 +202,8 @@ var pfsenseManager = &Z.Cmd{
 	Summary:  `pfsense-vm-manager starts or stops multiple pfsense virtual machines for local testing`,
 	Commands: []*Z.Cmd{help.Cmd},
 	Description: `
-	**pfsense-vm-manager** is a shortcut to stop or start multiple pfsense
-	virtual machines for testing locally.`,
+		**pfsense-vm-manager** is a shortcut to stop or start multiple pfsense
+		virtual machines for testing locally.`,
 	Call: func(caller *Z.Cmd, args ...string) error {
 		cmdlineArgs := strings.Join(args, " ")
 
@@ -211,5 +215,21 @@ var pfsenseManager = &Z.Cmd{
 		defer func() { _ = os.Remove(script) }()
 
 		return Z.Exec("bash", script, cmdlineArgs)
+	},
+}
+
+var epochDate = &Z.Cmd{
+	Name:     `date`,
+	MinArgs:  1,
+	Summary:  `convert timestamp to the system local time`,
+	Commands: []*Z.Cmd{help.Cmd},
+	Usage:    `ds scripts date`,
+	Description: `
+		Convert a *unix* timestamp to this systems local time.
+		
+		example: ds scripts date 1647826365`,
+	Call: func(caller *Z.Cmd, args ...string) error {
+		epoch := args[0]
+		return Z.Exec("date", "-d", fmt.Sprintf("@%s", epoch))
 	},
 }

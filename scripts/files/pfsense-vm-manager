@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+test ! -n "${1}" && echo "usage: pf-vm-manager start|stop" && echo exit 1;
+
+declare -a VMS=("p-2.5.0-110" "p-2.5.1-170" "p-2.6.0-203" "p-2.5.2-105")
+
+function start() {
+for vm in "${VMS[@]}"; do
+  startvmheadless "$vm"
+done
+}
+
+function stop() {
+for vm in "${VMS[@]}"; do
+  VBoxManage controlvm "$vm" poweroff
+done
+}
+
+if [ "$1" == "start" ]; then
+  start
+elif [ "$1" == "stop" ]; then
+  stop
+else
+  echo "did not provide 'start' or 'stop' command"
+fi

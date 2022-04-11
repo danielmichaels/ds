@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+# Script that generates Hugo metadata.
+# Takes one CLI  argument of FILENAME.
+
+test ! -n "${BLOG_DIRECTORY}" && echo "BLOG_DIRECTORY not set" && exit 1;
+test ! -n "${BLOG_DIRECTORY}/$(date '+%Y')" && echo "$BLOG_DIRECTORY/$(date '+%Y') not created" && exit 1;
+
+path="${BLOG_DIRECTORY}/$(date "+%Y")"
+
+DATA="+++
+title = \"$1\"
+categories = [\"\"]
+tags = [\"til\"]
+slug = \"$1\"
+date = \"$(date +'%Y-%m-%d')\"
+draft = \"false\"
+ShowToc = \"true\"
++++
+"
+
+DATE=$(date +"%y-%m-%d")
+FILENAME=$DATE'-'$1.md
+FILE="${path}/${FILENAME}"
+
+if [ $# -eq 0 ]
+  then
+    printf "%s\n\n" "[!] Missing filename argument [!]"
+    printf "%s\n\t%s\n" "example usage:" "til 'a new thing I learned today'"
+    exit 1
+fi
+if [ -e "$FILE" ]; then
+  echo "File Already Exists"
+  exit 1
+else
+  touch "$FILE"
+  echo "$DATA" > "$FILE"
+  echo "Created $FILE"
+fi
+
+exec vim +2 "${FILE}"

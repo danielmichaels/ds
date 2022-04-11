@@ -1,29 +1,67 @@
-// Copyright 2022 foo Authors
+// Copyright 2022 ds Daniel Michaels
 // SPDX-License-Identifier: Apache-2.0
 
-package ds
-
-// Go treats all files as if they are, more or less, in the same large
-// file. Create separate files to help you and others find the code you
-// need quickly.
+package scripts
 
 import (
+	"embed"
 	"errors"
 	"fmt"
-	"github.com/danielmichaels/ds/scripts"
+	Z "github.com/rwxrob/bonzai/z"
 	"github.com/rwxrob/help"
-	json2 "github.com/rwxrob/json"
+	"github.com/rwxrob/json"
+	"io/ioutil"
 	"net/http"
 	"os"
 	"strings"
-
-	Z "github.com/rwxrob/bonzai/z"
 )
 
-var s = &Z.Cmd{
+//go:embed "files"
+var ScriptFiles embed.FS
+
+// tmpFileCreator creates a temp file containing the script data passed in. The
+// file is not removed in this function - it must be done in the caller.
+func tmpFileCreator(script []byte) (string, error) {
+	tmp, err := ioutil.TempFile("/tmp", "ds-file")
+	if err != nil {
+		return "", err
+	}
+	f, err := os.OpenFile(tmp.Name(), os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
+	if err != nil {
+		return "", err
+	}
+	_, err = f.Write(script)
+	if err != nil {
+		return "", err
+	}
+	err = f.Close()
+	if err != nil {
+		return "", err
+	}
+	return tmp.Name(), nil
+}
+
+// Retriever reads the file provided and returns its data. It expects a valid
+// shell script. A temp file is created and that filename is then returned to be
+// called by Z.Exec
+func Retriever(filename string) (string, error) {
+	data, err := ScriptFiles.ReadFile(filename)
+	if err != nil {
+		return "", err
+	}
+
+	script, err := tmpFileCreator(data)
+	if err != nil {
+		return "", err
+	}
+	return script, nil
+}
+
+var Cmd = &Z.Cmd{
 	Name:     `scripts`,
 	Summary:  `call custom scripts`,
-	Commands: []*Z.Cmd{help.Cmd, weather, ipify, til, hugo, envCheck, ipinfo},
+	Aliases:  []string{"s"},
+	Commands: []*Z.Cmd{help.Cmd, weather, ipify, til, hugo, envCheck, ipinfo, pfsenseManager, epochDate},
 }
 
 var weather = &Z.Cmd{
@@ -40,7 +78,7 @@ var ipify = &Z.Cmd{
 	Summary:  `print out the current external IP address`,
 	Commands: []*Z.Cmd{help.Cmd},
 	Call: func(caller *Z.Cmd, none ...string) error {
-		script, err := scripts.Retriever("files/ipify")
+		script, err := Retriever("files/ipify")
 
 		if err != nil {
 			return err
@@ -50,6 +88,7 @@ var ipify = &Z.Cmd{
 		return Z.Exec("sh", script)
 	},
 }
+
 var hugo = &Z.Cmd{
 	Name:     `hugo`,
 	Summary:  `run the hugo docker image`,
@@ -57,7 +96,7 @@ var hugo = &Z.Cmd{
 	Call: func(caller *Z.Cmd, args ...string) error {
 		cmdlineArgs := strings.Join(args, " ")
 
-		script, err := scripts.Retriever("files/hugo")
+		script, err := Retriever("files/hugo")
 		if err != nil {
 			return err
 		}
@@ -104,7 +143,7 @@ var ipinfo = &Z.Cmd{
 
 		var result map[string]interface{}
 
-		cl := json2.Client
+		cl := json.Client
 		cl.CheckRedirect = func(r *http.Request, via []*http.Request) error {
 			for k, v := range via[0].Header {
 				r.Header[k] = v
@@ -113,7 +152,7 @@ var ipinfo = &Z.Cmd{
 		}
 		headers := map[string]string{}
 		headers["Authorization"] = bearer
-		req := json2.Request{
+		req := json.Request{
 			Method: "GET",
 			URL:    fmt.Sprintf("https://ipinfo.io/%s", args[0]),
 			Query:  nil,
@@ -121,11 +160,11 @@ var ipinfo = &Z.Cmd{
 			Body:   nil,
 			Into:   &result,
 		}
-		err := json2.Fetch(&req)
+		err := json.Fetch(&req)
 		if err != nil {
 			return err
 		}
-		marshal, err := json2.MarshalIndent(&result, " ", " ")
+		marshal, err := json.MarshalIndent(&result, " ", " ")
 		if err != nil {
 			return err
 		}
@@ -146,12 +185,51 @@ var til = &Z.Cmd{
 		}
 		cmdlineArgs := strings.Join(args, " ")
 
-		script, err := scripts.Retriever("files/til")
+		script, err := Retriever("files/til")
 		if err != nil {
 			return err
 		}
 		defer func() { _ = os.Remove(script) }()
 
 		return Z.Exec("bash", script, cmdlineArgs)
+	},
+}
+
+var pfsenseManager = &Z.Cmd{
+	Name:     `pfsense-vm-manager`,
+	MinArgs:  1,
+	Params:   []string{"start", "stop"},
+	Summary:  `pfsense-vm-manager starts or stops multiple pfsense virtual machines for local testing`,
+	Commands: []*Z.Cmd{help.Cmd},
+	Description: `
+		**pfsense-vm-manager** is a shortcut to stop or start multiple pfsense
+		virtual machines for testing locally.`,
+	Call: func(caller *Z.Cmd, args ...string) error {
+		cmdlineArgs := strings.Join(args, " ")
+
+		script, err := Retriever("files/pfsense-vm-manager")
+
+		if err != nil {
+			return err
+		}
+		defer func() { _ = os.Remove(script) }()
+
+		return Z.Exec("bash", script, cmdlineArgs)
+	},
+}
+
+var epochDate = &Z.Cmd{
+	Name:     `date`,
+	MinArgs:  1,
+	Summary:  `convert timestamp to the system local time`,
+	Commands: []*Z.Cmd{help.Cmd},
+	Usage:    `ds scripts date`,
+	Description: `
+		Convert a *unix* timestamp to this systems local time.
+		
+		example: ds scripts date 1647826365`,
+	Call: func(caller *Z.Cmd, args ...string) error {
+		epoch := args[0]
+		return Z.Exec("date", "-d", fmt.Sprintf("@%s", epoch))
 	},
 }

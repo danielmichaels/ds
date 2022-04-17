@@ -113,15 +113,16 @@ var envCheck = &Z.Cmd{
 	Call: func(caller *Z.Cmd, args ...string) error {
 		var s string
 
-		fmt.Printf("Show 'env'? y/N")
+		fmt.Printf("Show 'env'? y/N ")
 		_, err := fmt.Scanln(&s)
 		if err != nil {
 			return err
 		}
+
 		s = strings.TrimSpace(s)
 		s = strings.ToLower(s)
 
-		if s == "y" || s == "yes" {
+		if s == "y" {
 			return Z.Exec("env")
 		}
 		return nil

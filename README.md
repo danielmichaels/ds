@@ -1,38 +1,40 @@
-# 🌳 Go Bonzai™ Composite Command Tree
+# 🌳 *Do Something*
 
-*Create a new GitHub project using this template and change this
-README.md to match your project. Make all your template changes before
-making your first commit.*
-
-[![GoDoc](https://godoc.org/github.com/rwxrob/foo?status.svg)](https://godoc.org/github.com/rwxrob/foo)
 [![License](https://img.shields.io/badge/license-Apache2-brightgreen.svg)](LICENSE)
 
 ## Install
 
-This command can be installed as a standalone program or composed into a
-Bonzai command tree.
+`ds` is meant to be portable with a simple install process.
 
-Standalone
+### Recommended method
+
+Go to the [releases](https://github.com/danielmichaels/ds/releases) page and 
+download the appropriate binary for your operating system.
+
+For linux you can then drop the binary into your `PATH` or call the binary directly.
+
+To drop it into your path simply copy the `ds` binary to `$HOME/.local/bin`. If that directory is 
+in your `$PATH` it will now be accessible by calling `ds` from your terminal.
+
+### Standalone
 
 ```
-go install github.com/rwxrob/foo/foo@latest
+go install github.com/danielmichaels/ds/ds@latest
 ```
 
-Composed
+## Usage
 
-```go
-package z
+To use this binary simply execute `ds` in your terminal. All the commands available are listed in 
+the `COMMANDS` section of the output.
 
-import (
-	Z "github.com/rwxrob/bonzai/z"
-	"github.com/rwxrob/foo"
-)
+As a general rule any command that has an alias will contain several subcommands. For instance,
+`ds scripts` contains various subcommands which must be called using either the alias `s` or the
+full command of `scripts`.
 
-var Cmd = &Z.Cmd{
-	Name:     `z`,
-	Commands: []*Z.Cmd{help.Cmd, foo.Cmd},
-}
-```
+Alias' can be identified in the `COMMANDS` list by the pipe operator such as `s|scripts`. 
+
+To get your current external IP address use `ds scripts ipify`, or its shorthand alias of `ds s ipify`.
+
 
 ## Tab Completion
 
@@ -41,11 +43,8 @@ To activate bash completion just use the `complete -C` option from your
 completion is done by the program itself.
 
 ```
-complete -C foo foo
+complete -C ds ds
 ```
-
-If you don't have bash or tab completion check use the shortcut
-commands instead.
 
 ## Embedded Documentation
 
@@ -53,14 +52,11 @@ All documentation (like manual pages) has been embedded into the source
 code of the application. See the source or run the program with help to
 access it.
 
-## Reminders
-
-* Change `foo` every place to your project name (`git grep foo`)
-* Remove anything you don't need
-* Change `.github/FUNDING.yaml` to your own information
-* Update `.gitignore` to your liking
-* Will need to `go get -u` to update dependencies
+Example: `ds y2j help`
 
 ## Other Examples
 
-* <https://github.com/rwxrob/z> - the one that started it all
+* <https://github.com/rwxrob/z> - *the one that started it all* by [rwxrob]
+* <https://github.com/rwxrob/bonzai-example> - a template to use when creating your own
+
+[rwxrob]: https://github.com/rwxrob

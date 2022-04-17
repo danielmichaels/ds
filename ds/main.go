@@ -47,4 +47,14 @@ var Cmd = &Z.Cmd{
 		a single curl command to pull it down on to any box. This functionality
 		contained inside is custom to my needs and may not work for anyone else.
 		`,
+	Other: []Z.Section{
+		{"Shortcuts", `
+	For brevity the are several helpful shortcuts provided. These enable top level execution of commands that
+	may be several subcommands deep in the node tree.
+
+	"uuid": {"uniq", "uuid"},
+	"unix": {"scripts", "date"},
+	"env":  {"scripts", "env-check"},
+`},
+	},
 }

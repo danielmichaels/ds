@@ -73,6 +73,12 @@ using two `ds` commands together;
 ds scripts ipinfo $(ds scripts ip)
 ```
 
+Retrieving the current weather for a given location:
+
+```shell
+ds scripts weather london
+```
+
 Parsing JSON or YAML by using `ds yq`.
 
 ```shell

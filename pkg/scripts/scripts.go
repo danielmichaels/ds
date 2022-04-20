@@ -111,6 +111,7 @@ func fetch(urls []string) *http.Response {
 
 var ipcheck = &Z.Cmd{
 	Name:     `ip`,
+	Aliases:  []string{"ipify"},
 	Summary:  `print out the current external IP address`,
 	Commands: []*Z.Cmd{help.Cmd},
 	Call: func(caller *Z.Cmd, none ...string) error {

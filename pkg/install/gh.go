@@ -50,7 +50,6 @@ var gh = &Z.Cmd{
 			s = strings.TrimSpace(s)
 			s = strings.ToLower(s)
 
-			println(s)
 			switch s {
 			case "1":
 				script, err := scripts.Retriever("files/gh-ubuntu")

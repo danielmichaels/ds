@@ -10,12 +10,12 @@ var Cmd = &Z.Cmd{
 	Name:        `install`,
 	Summary:     `install executables and applications onto the host system`,
 	Description: `Commands under this branch are used to install common executables and applications on the host system.`,
-	Other:       []Z.Section{{`Application Options`, `curlie, gh`}},
+	Other:       []Z.Section{{`Application Options`, `curlie, gh, go`}},
 	Commands: []*Z.Cmd{
 		// imported commands
 		help.Cmd,
 		// local
-		curlie, gh,
+		curlie, gh, goLinux,
 	},
 }
 

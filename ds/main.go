@@ -4,6 +4,7 @@
 package main
 
 import (
+	"github.com/danielmichaels/ds/pkg/install"
 	"github.com/danielmichaels/ds/pkg/scripts"
 	Z "github.com/rwxrob/bonzai/z"
 	"github.com/rwxrob/config"
@@ -36,7 +37,7 @@ var Cmd = &Z.Cmd{
 		// imported
 		help.Cmd, config.Cmd, yq.Cmd, y2j.Cmd, vars.Cmd, uniq.Cmd,
 		// internal
-		scripts.Cmd,
+		scripts.Cmd, install.Cmd,
 	},
 	Issues: `github.com/danielmichaels/ds/issues`,
 	Site:   `danielms.site`,

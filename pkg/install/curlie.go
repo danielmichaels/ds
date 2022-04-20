@@ -4,6 +4,7 @@ import (
 	"fmt"
 	Z "github.com/rwxrob/bonzai/z"
 	"github.com/rwxrob/help"
+	"runtime"
 )
 
 var curlie = &Z.Cmd{
@@ -11,27 +12,45 @@ var curlie = &Z.Cmd{
 	Summary:  `install github.com/rs/curlie`,
 	Commands: []*Z.Cmd{help.Cmd},
 	Call: func(caller *Z.Cmd, args ...string) error {
-		if err := exeCheck("go"); err == nil {
-			err = goInstall("go", "github.com/rs/curlie@latest")
-			if err != nil {
-				return err
+		var success = func() { fmt.Println("curlie successfully installed") }
+		switch runtime.GOOS {
+		case "darwin":
+			if err := exeCheck("brew"); err == nil {
+				err = goInstall("brew", "rs/tap/curlie")
+				if err != nil {
+					return err
+				}
+				success()
+				return nil
+			}
+		case "windows":
+			if err := exeCheck("scoop"); err == nil {
+				err = goInstall("scoop", "curlie")
+				if err != nil {
+					return err
+				}
+				success()
+				return nil
+			}
+		case "linux":
+			if err := exeCheck("go"); err == nil {
+				err = goInstall("go", "github.com/rs/curlie@latest")
+				if err != nil {
+					return err
+				}
+				success()
+				return nil
+			}
+		default:
+			if err := exeCheck("go"); err == nil {
+				err = goInstall("go", "github.com/rs/curlie@latest")
+				if err != nil {
+					return err
+				}
+				success()
+				return nil
 			}
 		}
-
-		if err := exeCheck("brew"); err == nil {
-			err = goInstall("brew", "github.com/rs/curlie@latest")
-			if err != nil {
-				return err
-			}
-		}
-
-		if err := exeCheck("scoop"); err == nil {
-			err = goInstall("scoop", "github.com/rs/curlie@latest")
-			if err != nil {
-				return err
-			}
-		}
-		fmt.Println("curlie installed successfully")
 		return nil
 	},
 }

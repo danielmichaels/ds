@@ -4,6 +4,7 @@
 package main
 
 import (
+	"github.com/danielmichaels/ds/pkg/install"
 	"github.com/danielmichaels/ds/pkg/scripts"
 	Z "github.com/rwxrob/bonzai/z"
 	"github.com/rwxrob/config"
@@ -29,14 +30,14 @@ func main() {
 var Cmd = &Z.Cmd{
 	Name:      `ds`,
 	Summary:   `*Do Something* is a single binary to rule them all`,
-	Version:   `v0.0.4`,
+	Version:   `v0.0.5`,
 	Copyright: `Copyright 2022 Daniel Michaels`,
 	License:   `Apache-2.0`,
 	Commands: []*Z.Cmd{
 		// imported
 		help.Cmd, config.Cmd, yq.Cmd, y2j.Cmd, vars.Cmd, uniq.Cmd,
 		// internal
-		scripts.Cmd,
+		scripts.Cmd, install.Cmd,
 	},
 	Issues: `github.com/danielmichaels/ds/issues`,
 	Site:   `danielms.site`,

@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+set -e
+
+install_go() {
+  cd "$(mktemp -d)"
+
+  os=linux
+  arch=amd64
+
+  file=$(curl -SL  "https://golang.org/dl/?mode=json" \
+    | jq -r '.[0].files[]
+      | select(.os == "'"$os"'")
+      | select(.arch == "'"$arch"'")
+      | .filename')
+
+  curl -sSLO \
+    -H "Accept: application/vnd.github.v3+json" \
+     "https://dl.google.com/go/$file"
+
+  sudo tar xzf "$file" -C /usr/local/
+
+  echo "Make sure /usr/local/go/bin is in PATH"
+}
+
+install_go

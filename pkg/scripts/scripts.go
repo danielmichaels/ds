@@ -4,12 +4,14 @@
 package scripts
 
 import (
+	"context"
 	"embed"
 	"errors"
 	"fmt"
 	Z "github.com/rwxrob/bonzai/z"
 	"github.com/rwxrob/help"
 	"github.com/rwxrob/json"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -58,34 +60,74 @@ func Retriever(filename string) (string, error) {
 }
 
 var Cmd = &Z.Cmd{
-	Name:     `scripts`,
-	Summary:  `call custom scripts`,
-	Aliases:  []string{"s"},
-	Commands: []*Z.Cmd{help.Cmd, weather, ipify, til, hugo, envCheck, ipinfo, pfsenseManager, epochDate},
+	Name:    `scripts`,
+	Summary: `call custom scripts`,
+	Aliases: []string{"s"},
+	Commands: []*Z.Cmd{
+		// imported commands
+		help.Cmd,
+		// local
+		weather, ipcheck, til, hugo, envCheck, ipinfo, pfsenseManager, epochDate,
+	},
 }
 
 var weather = &Z.Cmd{
 	Name:     `weather`,
-	Summary:  `the current weather for Canberra`,
+	Summary:  `the current weather for a given location, defaults to Canberra`,
 	Commands: []*Z.Cmd{help.Cmd},
-	Call: func(caller *Z.Cmd, none ...string) error {
-		return Z.Exec("curl", "v2.wttr.in/Canberra")
+	Call: func(caller *Z.Cmd, args ...string) error {
+		cmdlineArgs := strings.Join(args, " ")
+		if cmdlineArgs == "" {
+			cmdlineArgs = "Canberra"
+		}
+		return Z.Exec("curl", fmt.Sprintf("v2.wttr.in/%s", cmdlineArgs))
 	},
 }
 
-var ipify = &Z.Cmd{
-	Name:     `ipify`,
+// fetch will fire off multiple requests and return the first response whilst cancelling
+// the remaining in-flight requests.
+//
+//   res := fetch([]string{"https://a.com", "https://b.com"})
+func fetch(urls []string) *http.Response {
+	ch := make(chan *http.Response)
+	defer close(ch)
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+	for _, url := range urls {
+		go func(ctx context.Context, url string) {
+			req, _ := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
+			resp, err := http.DefaultClient.Do(req)
+			if err == nil {
+				//log.Println(resp.Request.URL)
+				select {
+				case ch <- resp:
+				case <-ctx.Done():
+				}
+			}
+		}(ctx, url)
+	}
+	return <-ch
+}
+
+var ipcheck = &Z.Cmd{
+	Name:     `ip`,
+	Aliases:  []string{"ipify"},
 	Summary:  `print out the current external IP address`,
 	Commands: []*Z.Cmd{help.Cmd},
 	Call: func(caller *Z.Cmd, none ...string) error {
-		script, err := Retriever("files/ipify")
+		urls := []string{
+			"https://api.ipify.org?format=text",
+			"https://trackip.net/ip",
+			"https://ipinfo.io/ip",
+		}
+		res := fetch(urls)
 
+		ip, err := io.ReadAll(res.Body)
 		if err != nil {
 			return err
 		}
-		defer func() { _ = os.Remove(script) }()
-
-		return Z.Exec("sh", script)
+		fmt.Println(string(ip))
+		return nil
 	},
 }
 
@@ -94,15 +136,15 @@ var hugo = &Z.Cmd{
 	Summary:  `run the hugo docker image`,
 	Commands: []*Z.Cmd{help.Cmd},
 	Call: func(caller *Z.Cmd, args ...string) error {
-		cmdlineArgs := strings.Join(args, " ")
-
-		script, err := Retriever("files/hugo")
-		if err != nil {
-			return err
+		if os.Getenv("BLOG_PATH") == "" {
+			fmt.Println("BLOG_PATH not set. must point to the root directory for a hugo site")
+			Z.Exit()
 		}
-		defer func() { _ = os.Remove(script) }()
-
-		return Z.Exec("sh", script, cmdlineArgs)
+		cmdlineArgs := strings.Join(args, " ")
+		return Z.Exec(
+			"docker", "run", "--rm", "-it", "-v",
+			fmt.Sprintf("%s/%s:/src", os.Getenv("HOME"), os.Getenv("BLOG_PATH")),
+			"-p", "1313:1313", "klakegg/hugo", cmdlineArgs)
 	},
 }
 
@@ -139,39 +181,52 @@ var ipinfo = &Z.Cmd{
 			fmt.Println("must provide an IP address")
 			return caller.UsageError()
 		}
-		token := Z.Conf.Query(".ipinfo")
-		bearer := fmt.Sprintf("Bearer %s", token)
 
-		var result map[string]interface{}
-
-		cl := json.Client
-		cl.CheckRedirect = func(r *http.Request, via []*http.Request) error {
-			for k, v := range via[0].Header {
-				r.Header[k] = v
-			}
-			return nil
-		}
-		headers := map[string]string{}
-		headers["Authorization"] = bearer
-		req := json.Request{
-			Method: "GET",
-			URL:    fmt.Sprintf("https://ipinfo.io/%s", args[0]),
-			Query:  nil,
-			Header: headers,
-			Body:   nil,
-			Into:   &result,
-		}
-		err := json.Fetch(&req)
+		ip, err := queryIpinfo(args[0])
 		if err != nil {
 			return err
 		}
-		marshal, err := json.MarshalIndent(&result, " ", " ")
-		if err != nil {
-			return err
-		}
-		fmt.Println(string(marshal))
+		fmt.Println(ip)
 		return nil
 	},
+}
+
+// queryIpinfo calls http://ipinfo.io and returns a json object with the IP data
+// about the IP address being queried. This function expects an `.ipinfo` value to be
+// present but will succeed with less information if not found.
+//   ip, err := queryIpinfo("1.1.1.1")
+func queryIpinfo(ip string) (string, error) {
+	token := Z.Conf.Query(".ipinfo")
+	bearer := fmt.Sprintf("Bearer %s", token)
+
+	var result map[string]interface{}
+
+	cl := json.Client
+	cl.CheckRedirect = func(r *http.Request, via []*http.Request) error {
+		for k, v := range via[0].Header {
+			r.Header[k] = v
+		}
+		return nil
+	}
+	headers := map[string]string{}
+	headers["Authorization"] = bearer
+	req := json.Request{
+		Method: "GET",
+		URL:    fmt.Sprintf("https://ipinfo.io/%s", ip),
+		Query:  nil,
+		Header: headers,
+		Body:   nil,
+		Into:   &result,
+	}
+	err := json.Fetch(&req)
+	if err != nil {
+		return "", err
+	}
+	marshal, err := json.MarshalIndent(&result, " ", " ")
+	if err != nil {
+		return "", err
+	}
+	return string(marshal), nil
 }
 
 var til = &Z.Cmd{

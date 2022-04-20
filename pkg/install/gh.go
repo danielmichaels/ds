@@ -11,8 +11,11 @@ import (
 )
 
 var gh = &Z.Cmd{
-	Name:     `gh`,
-	Summary:  `install github.com/cli/cli`,
+	Name:    `gh`,
+	Summary: `install github.com/cli/cli`,
+	Description: `Installs github's cli *gh* and supports mac, windows and linux. Only Centos and 
+		Debian-based linux derivatives are supported. Mac and windows rely upon *brew* and *scoop*
+		respectively. No binary installations are supported as yet. Linux requires sudo privileges.`,
 	Commands: []*Z.Cmd{help.Cmd},
 	Call: func(caller *Z.Cmd, args ...string) error {
 		var success = func() { fmt.Println("gh successfully installed") }

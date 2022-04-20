@@ -8,8 +8,14 @@ import (
 )
 
 var curlie = &Z.Cmd{
-	Name:     `curlie`,
-	Summary:  `install github.com/rs/curlie`,
+	Name:    `curlie`,
+	Summary: `install github.com/rs/curlie`,
+	Description: `Installs *curlie* a drop-in replacement for cURL. It offers all the features
+			of curl but with *jq* output by default. 
+
+			The installer uses *brew* and Mac and *scoop* on Windows to install the application. Linux requires
+			Go to be installed. In future binary releases will be available making the need for Go to be
+			installed redundant.`,
 	Commands: []*Z.Cmd{help.Cmd},
 	Call: func(caller *Z.Cmd, args ...string) error {
 		var success = func() { fmt.Println("curlie successfully installed") }

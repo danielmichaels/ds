@@ -15,7 +15,7 @@ var Cmd = &Z.Cmd{
 		// imported commands
 		help.Cmd,
 		// local
-		curlie,
+		curlie, gh,
 	},
 }
 

@@ -10,7 +10,7 @@ import (
 	"fmt"
 	Z "github.com/rwxrob/bonzai/z"
 	"github.com/rwxrob/help"
-	"github.com/rwxrob/json"
+	json "github.com/rwxrob/json/pkg"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -196,8 +196,11 @@ var ipinfo = &Z.Cmd{
 // present but will succeed with less information if not found.
 //   ip, err := queryIpinfo("1.1.1.1")
 func queryIpinfo(ip string) (string, error) {
-	token := Z.Conf.Query(".ipinfo")
-	bearer := fmt.Sprintf("Bearer %s", token)
+	token, err := Z.Conf.Query(".ipinfo")
+	if err != nil {
+		return "", err
+	}
+	bearer := fmt.Sprintf("Bearer %s", strings.TrimSpace(token))
 
 	var result map[string]interface{}
 
@@ -218,7 +221,7 @@ func queryIpinfo(ip string) (string, error) {
 		Body:   nil,
 		Into:   &result,
 	}
-	err := json.Fetch(&req)
+	err = json.Fetch(&req)
 	if err != nil {
 		return "", err
 	}

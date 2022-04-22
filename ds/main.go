@@ -18,23 +18,21 @@ import (
 
 func main() {
 	Z.AllowPanic = true
-	// Global shortcuts for frequently used commands
-	Z.Shortcuts = map[string][]string{
-		"uuid":   {"uniq", "uuid"},
-		"isosec": {"uniq", "isosec"},
-		"env":    {"scripts", "env-check"},
-	}
-
 	Cmd.Run()
 }
 
 var Cmd = &Z.Cmd{
 	Name:      `ds`,
 	Summary:   `*Do Something* is a single binary to rule them all`,
-	Version:   `v0.1.0`,
+	Version:   `v0.1.1`,
 	Copyright: `Copyright 2022 Daniel Michaels`,
 	License:   `Apache-2.0`,
 	Comp:      compfile.New(),
+	Shortcuts: map[string][]string{
+		"uuid":   {"uniq", "uuid"},
+		"isosec": {"uniq", "isosec"},
+		"env":    {"scripts", "env-check"},
+	},
 	Commands: []*Z.Cmd{
 		// imported
 		help.Cmd, conf.Cmd, yq.Cmd, vars.Cmd, y2j.Cmd, vars.Cmd, uniq.Cmd,
@@ -58,18 +56,4 @@ var Cmd = &Z.Cmd{
 		3. Replace shell scripts on host
 
 		`,
-	Other: []Z.Section{
-		{"Shortcuts", `
-			For brevity the are several helpful shortcuts provided. These enable top level execution of commands that
-			may be several subcommands deep in the node tree.
-
-			**Shortcut**: Command Equivalent
-
-			* **env**:  "{{ .Name }} scripts env-check"
-			* **uuid**: "uniq uuid"
-			* **isosec**:  "uniq isosec"
-
-
-`},
-	},
 }

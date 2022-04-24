@@ -4,13 +4,13 @@
 
 ## Install
 
-`ds` is meant to be portable with a simple install process.
+`ds` is meant to be portable with a simple installation process.
 
 ### Recommended method (easy mode)
 
 *Requires Go 1.18+*
 ```
-go install github.com/danielmichaels/ds/ds@latest
+go install github.com/danielmichaels/cmd/ds@latest
 ```
 
 ### Go Install doesn't work

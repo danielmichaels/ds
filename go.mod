@@ -3,6 +3,7 @@ module github.com/danielmichaels/ds
 go 1.18
 
 require (
+	github.com/danielmichaels/zet-cmd v0.0.3
 	github.com/rwxrob/bonzai v0.12.2
 	github.com/rwxrob/compfile v0.1.10
 	github.com/rwxrob/conf v0.6.3

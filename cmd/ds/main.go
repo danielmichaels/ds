@@ -6,6 +6,7 @@ package main
 import (
 	"github.com/danielmichaels/ds/pkg/install"
 	"github.com/danielmichaels/ds/pkg/scripts"
+	"github.com/danielmichaels/zet-cmd"
 	Z "github.com/rwxrob/bonzai/z"
 	"github.com/rwxrob/compfile"
 	"github.com/rwxrob/conf"
@@ -24,7 +25,7 @@ func main() {
 var Cmd = &Z.Cmd{
 	Name:      `ds`,
 	Summary:   `*Do Something* is a single binary to rule them all`,
-	Version:   `v0.1.1`,
+	Version:   `v0.1.2`,
 	Copyright: `Copyright 2022 Daniel Michaels`,
 	License:   `Apache-2.0`,
 	Comp:      compfile.New(),
@@ -35,7 +36,7 @@ var Cmd = &Z.Cmd{
 	},
 	Commands: []*Z.Cmd{
 		// imported
-		help.Cmd, conf.Cmd, yq.Cmd, vars.Cmd, y2j.Cmd, vars.Cmd, uniq.Cmd,
+		help.Cmd, conf.Cmd, yq.Cmd, vars.Cmd, y2j.Cmd, vars.Cmd, uniq.Cmd, zet.Cmd,
 		// internal
 		scripts.Cmd, install.Cmd,
 	},

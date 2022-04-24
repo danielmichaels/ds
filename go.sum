@@ -1,5 +1,9 @@
 github.com/a8m/envsubst v1.3.0 h1:GmXKmVssap0YtlU3E230W98RWtWCyIZzjtf1apWWyAg=
 github.com/a8m/envsubst v1.3.0/go.mod h1:MVUTQNGQ3tsjOOtKCNd+fl8RzhsXcDvvAEzkhGtlsbY=
+github.com/danielmichaels/zet-cmd v0.0.1 h1:ufNhH4dzKS636tXFkWa4/2WT8d/ANUPBHnolSFfugww=
+github.com/danielmichaels/zet-cmd v0.0.1/go.mod h1:2CRp1HLyUg210C4UHazCrpB2T+HMpf2ACqmHw57DPUo=
+github.com/danielmichaels/zet-cmd v0.0.2 h1:aBM+wfWslk6sBTMrDTTlWufA6yvPGuI5TsYJ/e0ag38=
+github.com/danielmichaels/zet-cmd v0.0.2/go.mod h1:2CRp1HLyUg210C4UHazCrpB2T+HMpf2ACqmHw57DPUo=
 github.com/davecgh/go-spew v1.1.0 h1:ZDRjVQ15GmhC3fiQ8ni8+OwkZQO4DARzQgrnXU1Liz8=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/elliotchance/orderedmap v1.4.0 h1:wZtfeEONCbx6in1CZyE6bELEt/vFayMvsxqI5SgsR+A=

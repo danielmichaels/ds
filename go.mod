@@ -3,6 +3,7 @@ module github.com/danielmichaels/ds
 go 1.18
 
 require (
+	github.com/danielmichaels/zet-cmd v0.0.3
 	github.com/rwxrob/bonzai v0.12.2
 	github.com/rwxrob/compfile v0.1.10
 	github.com/rwxrob/conf v0.6.3
@@ -16,7 +17,6 @@ require (
 
 require (
 	github.com/a8m/envsubst v1.3.0 // indirect
-	github.com/danielmichaels/zet-cmd v0.0.3 // indirect
 	github.com/elliotchance/orderedmap v1.4.0 // indirect
 	github.com/fatih/color v1.13.0 // indirect
 	github.com/goccy/go-yaml v1.9.5 // indirect

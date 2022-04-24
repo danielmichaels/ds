@@ -95,7 +95,7 @@ func fetch(urls []string) *http.Response {
 	defer cancel()
 	for _, url := range urls {
 		go func(ctx context.Context, url string) {
-			req, _ := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
+			req, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, url, nil)
 			resp, err := http.DefaultClient.Do(req)
 			if err == nil {
 				//log.Println(resp.Request.URL)

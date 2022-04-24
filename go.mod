@@ -16,7 +16,7 @@ require (
 
 require (
 	github.com/a8m/envsubst v1.3.0 // indirect
-	github.com/danielmichaels/zet-cmd v0.0.2 // indirect
+	github.com/danielmichaels/zet-cmd v0.0.3 // indirect
 	github.com/elliotchance/orderedmap v1.4.0 // indirect
 	github.com/fatih/color v1.13.0 // indirect
 	github.com/goccy/go-yaml v1.9.5 // indirect

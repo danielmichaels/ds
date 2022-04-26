@@ -17,6 +17,17 @@ import (
 	"github.com/rwxrob/yq"
 )
 
+func init() {
+	err := Z.Conf.SoftInit()
+	if err != nil {
+		panic("system error initializing conf")
+	}
+	err = Z.Vars.SoftInit()
+	if err != nil {
+		panic("system error initializing vars")
+	}
+}
+
 func main() {
 	Z.AllowPanic = true
 	Cmd.Run()
@@ -25,11 +36,11 @@ func main() {
 var Cmd = &Z.Cmd{
 	Name:      `ds`,
 	Summary:   `*Do Something* is a single binary to rule them all`,
-	Version:   `v0.1.2`,
+	Version:   `v0.1.3`,
 	Copyright: `Copyright 2022 Daniel Michaels`,
 	License:   `Apache-2.0`,
 	Comp:      compfile.New(),
-	Shortcuts: map[string][]string{
+	Shortcuts: Z.ArgMap{
 		"uuid":   {"uniq", "uuid"},
 		"isosec": {"uniq", "isosec"},
 		"env":    {"scripts", "env-check"},

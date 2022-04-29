@@ -36,7 +36,7 @@ func main() {
 var Cmd = &Z.Cmd{
 	Name:      `ds`,
 	Summary:   `*Do Something* is a single binary to rule them all`,
-	Version:   `v0.1.4`,
+	Version:   `v0.1.5`,
 	Copyright: `Copyright 2022 Daniel Michaels`,
 	License:   `Apache-2.0`,
 	Comp:      compfile.New(),

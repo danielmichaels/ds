@@ -6,6 +6,8 @@ github.com/danielmichaels/zet-cmd v0.0.5 h1:g9X5YPlE71bOvZYn8nSVDa/m6iCgREa6cAXx
 github.com/danielmichaels/zet-cmd v0.0.5/go.mod h1:2CRp1HLyUg210C4UHazCrpB2T+HMpf2ACqmHw57DPUo=
 github.com/danielmichaels/zet-cmd v0.0.7 h1:KDtVjlGTGXD6fQCaaFI5f1ID9zGx0OftWlVm9SPLIGc=
 github.com/danielmichaels/zet-cmd v0.0.7/go.mod h1:2CRp1HLyUg210C4UHazCrpB2T+HMpf2ACqmHw57DPUo=
+github.com/danielmichaels/zet-cmd v0.0.8 h1:6mfW0sAi9cr3zy9Xwgz556IX0boQi6Afe2633x2ve5g=
+github.com/danielmichaels/zet-cmd v0.0.8/go.mod h1:2CRp1HLyUg210C4UHazCrpB2T+HMpf2ACqmHw57DPUo=
 github.com/davecgh/go-spew v1.1.0 h1:ZDRjVQ15GmhC3fiQ8ni8+OwkZQO4DARzQgrnXU1Liz8=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/elliotchance/orderedmap v1.4.0 h1:wZtfeEONCbx6in1CZyE6bELEt/vFayMvsxqI5SgsR+A=
@@ -109,6 +111,8 @@ golang.org/x/sys v0.0.0-20210630005230-0f9fa26af87c/go.mod h1:oPkhp1MJrh7nUepCBc
 golang.org/x/sys v0.0.0-20210927094055-39ccf1dd6fa6/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/sys v0.0.0-20220422013727-9388b58f7150 h1:xHms4gcpe1YE7A3yIllJXP16CMAGuqwO2lX1mTyyRRc=
 golang.org/x/sys v0.0.0-20220422013727-9388b58f7150/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
+golang.org/x/sys v0.0.0-20220429233432-b5fbb4746d32 h1:Js08h5hqB5xyWR789+QqueR6sDE8mk+YvpETZ+F6X9Y=
+golang.org/x/sys v0.0.0-20220429233432-b5fbb4746d32/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/term v0.0.0-20220411215600-e5f449aeb171 h1:EH1Deb8WZJ0xc0WK//leUHXcX9aLE5SymusoTmMZye8=
 golang.org/x/term v0.0.0-20220411215600-e5f449aeb171/go.mod h1:jbD1KX2456YbFQfuXm/mYQcufACuNUgVhRMnK/tPxf8=
 golang.org/x/text v0.3.0/go.mod h1:NqM8EUOU14njkJ3fqMW+pc6Ldnwhi/IjpwHt7yyuwOQ=

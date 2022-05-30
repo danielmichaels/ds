@@ -8,7 +8,6 @@ import (
 	"github.com/danielmichaels/ds/pkg/scripts"
 	"github.com/danielmichaels/zet-cmd"
 	Z "github.com/rwxrob/bonzai/z"
-	"github.com/rwxrob/compfile"
 	"github.com/rwxrob/conf"
 	"github.com/rwxrob/help"
 	"github.com/rwxrob/uniq"
@@ -36,10 +35,9 @@ func main() {
 var Cmd = &Z.Cmd{
 	Name:      `ds`,
 	Summary:   `*Do Something* is a single binary to rule them all`,
-	Version:   `v0.1.6`,
+	Version:   `v0.1.7`,
 	Copyright: `Copyright 2022 Daniel Michaels`,
 	License:   `Apache-2.0`,
-	Comp:      compfile.New(),
 	Shortcuts: Z.ArgMap{
 		"uuid":   {"uniq", "uuid"},
 		"isosec": {"uniq", "isosec"},
@@ -61,11 +59,11 @@ var Cmd = &Z.Cmd{
 
 		This functionality contained inside is custom to my needs and may not work for anyone else.
 
-		Intentions for **{{ .Name }}**
+		Intentions for **{{ .Name }}** 
 
-		1. All-in-one binary
-		2. Install often used applications/binaries
-		3. Replace shell scripts on host
+		* All-in-one binary
+		* Install often used applications/binaries
+		* Replace shell scripts on host 
 
 		`,
 }

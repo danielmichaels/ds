@@ -4,6 +4,7 @@
 package main
 
 import (
+	"github.com/danielmichaels/ds/pkg/get"
 	"github.com/danielmichaels/ds/pkg/install"
 	"github.com/danielmichaels/ds/pkg/scripts"
 	"github.com/danielmichaels/zet-cmd"
@@ -45,7 +46,7 @@ var Cmd = &Z.Cmd{
 	},
 	Commands: []*Z.Cmd{
 		// imported
-		help.Cmd, conf.Cmd, yq.Cmd, vars.Cmd, y2j.Cmd, vars.Cmd, uniq.Cmd, zet.Cmd,
+		help.Cmd, conf.Cmd, yq.Cmd, vars.Cmd, y2j.Cmd, vars.Cmd, uniq.Cmd, zet.Cmd, get.Cmd,
 		// internal
 		scripts.Cmd, install.Cmd,
 	},

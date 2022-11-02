@@ -4,6 +4,7 @@ go 1.18
 
 require (
 	github.com/danielmichaels/zet-cmd v0.2.1
+	github.com/olekukonko/tablewriter v0.0.5
 	github.com/rwxrob/bonzai v0.14.1
 	github.com/rwxrob/conf v0.8.0
 	github.com/rwxrob/help v0.5.0
@@ -36,7 +37,6 @@ require (
 	github.com/mitchellh/colorstring v0.0.0-20190213212951-d06e56a500db // indirect
 	github.com/muesli/reflow v0.3.0 // indirect
 	github.com/muesli/termenv v0.9.0 // indirect
-	github.com/olekukonko/tablewriter v0.0.5 // indirect
 	github.com/rivo/uniseg v0.4.2 // indirect
 	github.com/rogpeppe/go-internal v1.8.1 // indirect
 	github.com/rwxrob/compcmd v0.3.0 // indirect

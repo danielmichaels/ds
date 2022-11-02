@@ -46,9 +46,9 @@ var Cmd = &Z.Cmd{
 	},
 	Commands: []*Z.Cmd{
 		// imported
-		help.Cmd, conf.Cmd, yq.Cmd, vars.Cmd, y2j.Cmd, vars.Cmd, uniq.Cmd, zet.Cmd, get.Cmd,
+		help.Cmd, conf.Cmd, yq.Cmd, vars.Cmd, y2j.Cmd, vars.Cmd, uniq.Cmd, zet.Cmd,
 		// internal
-		scripts.Cmd, install.Cmd,
+		scripts.Cmd, install.Cmd, get.Cmd,
 	},
 	Issues: `github.com/danielmichaels/ds/issues`,
 	Site:   `danielms.site`,

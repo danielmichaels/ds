@@ -91,7 +91,6 @@ func Download(tool *Tool, arch, opSystem, version string) (string, error) {
 		return "", err
 	}
 
-	//outputFullPath := fmt.Sprintf("%s/%s", outputPath, tool.Name)
 	_, err = CopyFile(outputPath, localPath, 0700)
 	log.Printf("Copied %q to %q\n", outputPath, localPath)
 	if err != nil {

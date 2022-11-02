@@ -28,8 +28,63 @@ func httpClient(timeout *time.Duration) http.Client {
 	return cl
 }
 
-// USE DOWNLOAD LINK
-// this way we control the url and don't have loop over api
+var Cmd = &Z.Cmd{
+	Name:    `get`,
+	Summary: `install executables and applications on the host system [requires internet]`,
+	Description: `
+		The *get* command downloads a tools or applications from that providers releases or
+		downloads page. Typically, tools are downloaded as a binary for fast and efficient access
+		on the host platform.
+		`,
+	Other: []Z.Section{
+		{
+			Title: "Examples",
+			Body: `
+			ds get - list all available tools
+
+			ds get arkade - download the Arkade binary`,
+		},
+	},
+	Commands: []*Z.Cmd{
+		// imported commands
+		help.Cmd,
+		// local
+	},
+	Call: func(_ *Z.Cmd, args ...string) error {
+		tools := MakeTools()
+		arch, opSystem := GetClientArch()
+		sort.Sort(tools)
+		if len(args) == 0 {
+			ListToolsTable(tools)
+			return nil
+		}
+		tool := args[0]
+		log.Printf("Looking up version for %q\n", tool)
+		t, err := getTool(tool, tools)
+		if err != nil {
+			return err
+		}
+
+		version := t.Version
+		if version == "" {
+			version = "latest"
+		}
+		_, err = Download(&t, arch, opSystem, version)
+		if err != nil {
+			return err
+		}
+
+		err = PrintPostInstallMessage(t)
+		if err != nil {
+			return err
+		}
+
+		return nil
+	},
+}
+
+// FindGithubRelease retrieves a response from GitHub's API for any valid repository
+// in JSON format.
 func FindGithubRelease(owner, repo string) ([]*GithubAPIReleasesResponse, error) {
 	url := fmt.Sprintf("https://api.github.com/repos/%s/%s/releases", owner, repo)
 	cl := httpClient(&httpTimeout)
@@ -60,77 +115,45 @@ func FindGithubRelease(owner, repo string) ([]*GithubAPIReleasesResponse, error)
 	return release, nil
 }
 
-var Cmd = &Z.Cmd{
-	Name:    `get`,
-	Summary: `get executables and applications onto the host system [requires internet]`,
-	Description: `
-		The *get* command downloads a tools or applications from that providers releases or
-		downloads page. Typically, tools are downloaded as a binary for fast and efficient access
-		on the host platform.
-		`,
-	Commands: []*Z.Cmd{
-		// imported commands
-		help.Cmd,
-		// local
-	},
-	Call: func(_ *Z.Cmd, args ...string) error {
-		tools := MakeTools()
-		arch, opSystem := GetClientArch()
-		sort.Sort(tools)
-		if len(args) == 0 {
-			table := tablewriter.NewWriter(os.Stdout)
-			table.SetColWidth(60)
-			table.SetHeader([]string{"Tool", "Description"})
-			count := 0
-			for _, tool := range tools {
-				table.Append([]string{tool.Name, tool.Description})
-				count++
-			}
-			table.SetHeaderColor(
-				tablewriter.Colors{tablewriter.Bold, tablewriter.FgGreenColor},
-				tablewriter.Colors{tablewriter.Bold, tablewriter.Normal},
-			)
-			table.SetColumnColor(
-				tablewriter.Colors{tablewriter.Bold, tablewriter.FgHiGreenColor},
-				tablewriter.Colors{tablewriter.Normal, tablewriter.Normal},
-			)
-			table.SetRowLine(true)
-			table.SetCaption(true, fmt.Sprintf("%d tools are currently supported.\n", count))
-			table.Render()
-			return nil
-		}
-		tool := args[0]
-		log.Printf("Looking up version for %q\n", tool)
-		t, err := getTool(tool, tools)
-		if err != nil {
-			return err
-		}
-
-		version := t.Version
-		if version == "" {
-			version = "latest"
-		}
-		// todo: allow more version options
-		// todo if version == "" then get latest
-		_, err = Download(&t, arch, opSystem, version)
-		if err != nil {
-			return err
-		}
-
-		lt := ToolLocal{
-			Name:    t.Name,
-			Path:    fmt.Sprintf("%s/%s/%s", os.Getenv("HOME"), toolFilePath, t.Name),
-			BinPath: fmt.Sprintf("%s", toolFilePath),
-		}
-		msg, err := PostInstallationMessage(lt)
-		if err != nil {
-			return err
-		}
-		fmt.Printf("%s\n", msg)
-		return nil
-	},
+func PrintPostInstallMessage(t Tool) error {
+	lt := ToolLocal{
+		Name:    t.Name,
+		Path:    fmt.Sprintf("%s/%s/%s", os.Getenv("HOME"), toolFilePath, t.Name),
+		BinPath: fmt.Sprintf("%s", toolFilePath),
+	}
+	msg, err := PostInstallationMessage(lt)
+	if err != nil {
+		return err
+	}
+	fmt.Printf("%s\n", msg)
+	return nil
 }
 
+// ListToolsTable returns a list of all supported tools in tabular format.
+func ListToolsTable(tools Tools) {
+	table := tablewriter.NewWriter(os.Stdout)
+	table.SetColWidth(60)
+	table.SetHeader([]string{"Tool", "Description"})
+	count := 0
+	for _, tool := range tools {
+		table.Append([]string{tool.Name, tool.Description})
+		count++
+	}
+	table.SetHeaderColor(
+		tablewriter.Colors{tablewriter.Bold, tablewriter.FgGreenColor},
+		tablewriter.Colors{tablewriter.Bold, tablewriter.Normal},
+	)
+	table.SetColumnColor(
+		tablewriter.Colors{tablewriter.Bold, tablewriter.FgHiGreenColor},
+		tablewriter.Colors{tablewriter.Normal, tablewriter.Normal},
+	)
+	table.SetRowLine(true)
+	table.SetCaption(true, fmt.Sprintf("%d tools are currently supported.\n", count))
+	table.Render()
+}
+
+// getTool retrieves tool information from the all the available Tool structs
+// and if a valid entry is found returns it.
 func getTool(tool string, tools Tools) (Tool, error) {
 	for _, t := range tools {
 		if tool == t.Name {
@@ -188,6 +211,11 @@ func toolVersion(tool *Tool, version string) string {
 	}
 	return ver
 }
+
+// GetClientArch retrieves the host systems architecture and operating system.
+// It will change the naming to a consistent format for linux/amd64. Further
+// transformations of the architecture and operating system are then done elsewhere
+// from a common base.
 func GetClientArch() (arch, os string) {
 	os = runtime.GOOS
 	if runtime.GOOS == "linux" {
@@ -199,6 +227,9 @@ func GetClientArch() (arch, os string) {
 	}
 	return arch, os
 }
+
+// GetDownloadURL returns the downloadable assets from GitHub for use in other
+// functions.
 func GetDownloadURL(tool Tool, arch, opSystem, version string) (string, error) {
 	releases, err := FindGithubRelease(tool.Owner, tool.Repo)
 	if err != nil {
@@ -230,6 +261,8 @@ func GetDownloadURL(tool Tool, arch, opSystem, version string) (string, error) {
 	return "", fmt.Errorf("no download URL found for %s", tool.Name)
 }
 
+// GithubAPIReleasesResponse is taken from the GitHub Releases API
+// ref: https://docs.github.com/en/rest/releases/releases#list-releases
 type GithubAPIReleasesResponse struct {
 	Url       string `json:"url"`
 	AssetsUrl string `json:"assets_url"`

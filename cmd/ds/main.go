@@ -17,6 +17,8 @@ import (
 	"github.com/rwxrob/yq"
 )
 
+var Version string
+
 func init() {
 	err := Z.Conf.SoftInit()
 	if err != nil {
@@ -33,10 +35,18 @@ func main() {
 	Cmd.Run()
 }
 
+func MakeVersion() string {
+	if len(Version) == 0 {
+		return "dev"
+	} else {
+		return Version
+	}
+}
+
 var Cmd = &Z.Cmd{
 	Name:      `ds`,
 	Summary:   `*Do Something* is a single binary to rule them all`,
-	Version:   `v0.1.7`,
+	Version:   MakeVersion(),
 	Copyright: `Copyright 2022 Daniel Michaels`,
 	License:   `Apache-2.0`,
 	Shortcuts: Z.ArgMap{

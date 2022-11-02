@@ -19,7 +19,7 @@ import (
 )
 
 var (
-	httpTimeout = 10 * time.Second
+	httpTimeout = 30 * time.Second
 )
 
 func httpClient(timeout *time.Duration) http.Client {

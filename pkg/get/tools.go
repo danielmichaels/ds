@@ -330,7 +330,6 @@ func MakeTools() Tools {
 		})
 
 	tools = append(tools,
-		// TODO: needs unzip method
 		Tool{
 			Name:        "rclone",
 			Repo:        "rclone",
@@ -342,7 +341,7 @@ func MakeTools() Tools {
 				{{ if HasPrefix .OS "ming" -}}
 				{{$osStr = "Windows"}}
 				{{- else if eq .OS "linux" -}}
-				{{$osStr = "Linux"}}
+				{{$osStr = "linux"}}
 				{{- else if eq .OS "darwin" -}}
 				{{$osStr = "Darwin"}}
 				{{- end -}}
@@ -352,9 +351,11 @@ func MakeTools() Tools {
 				{{$archStr = "arm"}}
 				{{- else if eq .Arch "aarch64" -}}
 				{{$archStr = "arm64"}}
+				{{- else if eq .Arch "x86_64" -}}
+				{{$archStr = "amd64"}}
 				{{- end -}}
 
-				{{.Name}}_{{.VersionNumber}}_{{$osStr}}_{{$archStr}}.tar.gz`,
+				{{.Name}}-v{{.VersionNumber}}-{{$osStr}}-{{$archStr}}.zip`,
 		})
 
 	tools = append(tools,
@@ -617,7 +618,6 @@ func MakeTools() Tools {
 				{{.Name}}-{{$osStr}}-{{$arch}}{{$ext}}`,
 		})
 	tools = append(tools,
-		// todo: needs unzip
 		Tool{
 			Owner:       "nats-io",
 			Repo:        "natscli",

@@ -4,6 +4,7 @@ go 1.18
 
 require (
 	github.com/danielmichaels/zet-cmd v0.2.1
+	github.com/olekukonko/tablewriter v0.0.5
 	github.com/rwxrob/bonzai v0.14.1
 	github.com/rwxrob/conf v0.8.0
 	github.com/rwxrob/help v0.5.0
@@ -12,6 +13,7 @@ require (
 	github.com/rwxrob/vars v0.4.1
 	github.com/rwxrob/y2j v0.4.0
 	github.com/rwxrob/yq v0.3.0
+	github.com/schollz/progressbar/v3 v3.11.0
 )
 
 require (
@@ -28,14 +30,14 @@ require (
 	github.com/lucasb-eyer/go-colorful v1.2.0 // indirect
 	github.com/magiconair/properties v1.8.6 // indirect
 	github.com/mattn/go-colorable v0.1.12 // indirect
-	github.com/mattn/go-isatty v0.0.14 // indirect
-	github.com/mattn/go-runewidth v0.0.13 // indirect
+	github.com/mattn/go-isatty v0.0.16 // indirect
+	github.com/mattn/go-runewidth v0.0.14 // indirect
 	github.com/microcosm-cc/bluemonday v1.0.17 // indirect
 	github.com/mikefarah/yq/v4 v4.25.1 // indirect
+	github.com/mitchellh/colorstring v0.0.0-20190213212951-d06e56a500db // indirect
 	github.com/muesli/reflow v0.3.0 // indirect
 	github.com/muesli/termenv v0.9.0 // indirect
-	github.com/olekukonko/tablewriter v0.0.5 // indirect
-	github.com/rivo/uniseg v0.2.0 // indirect
+	github.com/rivo/uniseg v0.4.2 // indirect
 	github.com/rogpeppe/go-internal v1.8.1 // indirect
 	github.com/rwxrob/compcmd v0.3.0 // indirect
 	github.com/rwxrob/compfile v0.1.12 // indirect
@@ -51,8 +53,8 @@ require (
 	github.com/yuin/goldmark-emoji v1.0.1 // indirect
 	golang.org/x/crypto v0.0.0-20220525230936-793ad666bf5e // indirect
 	golang.org/x/net v0.0.0-20220524220425-1d687d428aca // indirect
-	golang.org/x/sys v0.0.0-20220520151302-bc2c85ada10a // indirect
-	golang.org/x/term v0.0.0-20220526004731-065cf7ba2467 // indirect
+	golang.org/x/sys v0.1.0 // indirect
+	golang.org/x/term v0.1.0 // indirect
 	golang.org/x/text v0.3.7 // indirect
 	golang.org/x/xerrors v0.0.0-20220517211312-f3a8303e98df // indirect
 	gopkg.in/op/go-logging.v1 v1.0.0-20160211212156-b2cb9fa56473 // indirect

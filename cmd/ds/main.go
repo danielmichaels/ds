@@ -4,6 +4,7 @@
 package main
 
 import (
+	"github.com/danielmichaels/ds/pkg/get"
 	"github.com/danielmichaels/ds/pkg/install"
 	"github.com/danielmichaels/ds/pkg/scripts"
 	"github.com/danielmichaels/zet-cmd"
@@ -15,6 +16,8 @@ import (
 	"github.com/rwxrob/y2j"
 	"github.com/rwxrob/yq"
 )
+
+var Version string
 
 func init() {
 	err := Z.Conf.SoftInit()
@@ -32,10 +35,18 @@ func main() {
 	Cmd.Run()
 }
 
+func MakeVersion() string {
+	if len(Version) == 0 {
+		return "dev"
+	} else {
+		return Version
+	}
+}
+
 var Cmd = &Z.Cmd{
 	Name:      `ds`,
 	Summary:   `*Do Something* is a single binary to rule them all`,
-	Version:   `v0.1.7`,
+	Version:   MakeVersion(),
 	Copyright: `Copyright 2022 Daniel Michaels`,
 	License:   `Apache-2.0`,
 	Shortcuts: Z.ArgMap{
@@ -47,7 +58,7 @@ var Cmd = &Z.Cmd{
 		// imported
 		help.Cmd, conf.Cmd, yq.Cmd, vars.Cmd, y2j.Cmd, vars.Cmd, uniq.Cmd, zet.Cmd,
 		// internal
-		scripts.Cmd, install.Cmd,
+		scripts.Cmd, install.Cmd, get.Cmd,
 	},
 	Issues: `github.com/danielmichaels/ds/issues`,
 	Site:   `danielms.site`,

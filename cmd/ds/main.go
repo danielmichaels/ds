@@ -4,13 +4,14 @@
 package main
 
 import (
+	cr "github.com/danielmichaels/check-redirects-bonzai"
 	"github.com/danielmichaels/ds/pkg/get"
 	"github.com/danielmichaels/ds/pkg/install"
 	"github.com/danielmichaels/ds/pkg/scripts"
 	"github.com/danielmichaels/zet-cmd"
 	Z "github.com/rwxrob/bonzai/z"
 	"github.com/rwxrob/conf"
-	"github.com/rwxrob/help"
+	h "github.com/rwxrob/help"
 	"github.com/rwxrob/uniq"
 	"github.com/rwxrob/vars"
 	"github.com/rwxrob/y2j"
@@ -56,9 +57,9 @@ var Cmd = &Z.Cmd{
 	},
 	Commands: []*Z.Cmd{
 		// imported
-		help.Cmd, conf.Cmd, yq.Cmd, vars.Cmd, y2j.Cmd, vars.Cmd, uniq.Cmd, zet.Cmd,
+		h.Cmd, conf.Cmd, yq.Cmd, vars.Cmd, y2j.Cmd, vars.Cmd, uniq.Cmd, zet.Cmd,
 		// internal
-		scripts.Cmd, install.Cmd, get.Cmd,
+		scripts.Cmd, install.Cmd, get.Cmd, cr.Cmd,
 	},
 	Issues: `github.com/danielmichaels/ds/issues`,
 	Site:   `danielms.site`,
